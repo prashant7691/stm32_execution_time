@@ -1,0 +1,54 @@
+// General code to find the number of CPU cycles for a particular block  
+// DWT clock 
+
+
+volatile unsigned int *DWT_CYCCNT   = (volatile unsigned int *)0xE0001004; //address of the register
+volatile unsigned int *DWT_CONTROL  = (volatile unsigned int *)0xE0001000; //address of the register
+volatile unsigned int *DWT_LAR      = (volatile unsigned int *)0xE0001FB0; //address of the register
+volatile unsigned int *SCB_DEMCR    = (volatile unsigned int *)0xE000EDFC; //address of the register
+
+volatile unsigned int x,y;
+
+
+
+
+
+
+int main()
+{
+
+
+// Code to enable FPU
+*(uint32_t *)(0xE000ED88) |= 0x00F00000;  //Enable FPU
+__DSB(); //data synch barrier
+__ISB(); //instruction synch barrier
+
+
+  *DWT_LAR = 0xC5ACCE55; // unlock (CM7)
+    *SCB_DEMCR |= 0x01000000;
+    *DWT_CYCCNT = 0; // reset the counter
+    *DWT_CONTROL |= 1 ; // enable the counter
+
+
+
+
+
+
+
+  x = *DWT_CYCCNT;
+
+//code under 
+
+y = *DWT_CYCCNT;
+x = (y - x);
+
+
+
+
+
+
+
+
+
+
+}
